@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      MEGACITY_ADDR: ":8080"
+      MEGACITY_DATA: /app/data/megacity.json
+      MEGACITY_SECRET: ${MEGACITY_SECRET:-change-this-secret-before-deployment}
+    volumes:
+      - megacity-data:/app/data
+    expose:
+      - "8080"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "${FRONTEND_PORT:-5173}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  megacity-data:
